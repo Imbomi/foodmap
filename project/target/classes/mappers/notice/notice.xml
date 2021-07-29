@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="notice">
+
+	<select id="notice_list" resultType="com.example.project.model.notice.dto.NoticeDTO">
+		select * 
+		from (
+		    select rownum as rn, A.*
+		    from (
+		      select notice_idx,writer,title,regdate,readcount
+			      ,filename,filesize,down from notice n order by notice_idx desc
+		    ) A
+		)
+		where rn between #{start} and #{end} 
+	</select>
+	
+	<select id="notice_count" resultType="int">
+		select count(*) from notice
+	</select>
+	
+	<insert id="notice_insert">
+		insert into notice 
+			(notice_idx,writer,title,content,filename)
+		values 
+		( (select nvl(max(notice_idx)+1,1) from notice), #{writer}, #{title}, #{content}, #{filename})
+	</insert> 
+	
+	<update id="plusDown">
+		update notice set down=down+1 where notice_idx=#{notice_idx}
+	</update>
+	
+	<select id="getFileName" resultType="String">
+		select filename from notice where notice_idx=#{notice_idx}
+	</select>
+	
+	<update id="plusReadCount">
+		update notice set readcount=readcount+1 where notice_idx=#{notice_idx}
+	</update>
+	
+	<select id="view" resultType="com.example.project.model.notice.dto.NoticeDTO">
+		select * from notice where notice_idx=#{notice_idx}
+	</select>
+	
+	<update id="update">
+		update notice set writer=#{writer}, title=#{title}, content=#{content},
+			filename=#{filename}
+		where notice_idx=#{notice_idx}
+	</update>
+	<delete id="delete">
+		delete from notice where notice_idx=#{notice_idx}
+	</delete>
+	
+	<insert id="addAttach">
+		insert into attach_fm (fullName,notice_idx)
+		values
+		( #{fullName} , seq_attach.currval)
+	</insert>
+	
+</mapper>	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

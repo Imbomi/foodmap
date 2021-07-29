@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="restaurant">
+
+	<select id="resto_list"
+		resultType="com.example.project.model.restaurant.dto.RestaurantDTO">
+		<include refid="paging_header" />
+		select * from restaurant
+		<include refid="search" />
+		<include refid="ord" />
+		<include refid="paging_footer" />
+	</select>
+
+	<select id="view"
+		resultType="com.example.project.model.restaurant.dto.RestaurantDTO">
+		<!-- select * from restaurant where rt_idx=#{rt_idx} -->
+		select * from restaurant 
+		 where rt_idx=#{rt_idx}
+	</select>
+
+	<update id="goodCount">
+		update restaurant set
+		goodcount=(select count(*) from good where rt_idx=#{rt_idx})
+		where rt_idx=#{rt_idx}
+	</update>
+
+	<update id="plusReadCount">
+		update restaurant set readcount=readcount+1 where
+		rt_idx=#{rt_idx}
+	</update>
+
+	<insert id="resto_insert">
+		insert into restaurant
+		(rt_idx,rt_name,rt_summary,writer,category,ppp,rt_content,picture_url,postcode,address1,address2)
+		values
+		(
+		(select nvl(max(rt_idx)+1,1) from restaurant), #{rt_name},
+		#{rt_summary},
+		#{writer}, #{category},#{ppp}, #{rt_content},
+		#{picture_url},#{postcode},#{address1},#{address2} )
+	</insert>
+
+	<update id="resto_update">
+		update restaurant set rt_name=#{rt_name},
+		rt_summary=#{rt_summary},
+		category=#{category},
+		ppp=#{ppp},
+		rt_content=#{rt_content},
+		picture_url=#{picture_url},
+		postcode=#{postcode},
+		address1=#{address1},
+		address2=#{address2}
+		where
+		rt_idx=#{rt_idx}
+	</update>
+	
+	<delete id="resto_delete">
+		delete from restaurant where rt_idx=#{rt_idx}
+	</delete>
+
+	<select id="count" resultType="int">
+		select count(*) from restaurant
+		<include refid="search" />
+	</select>
+
+	<select id="getFile" resultType="String">
+		select picture_url from
+		restaurant
+		where rt_idx=#{rt_idx}
+	</select>
+
+	<sql id="search">
+		<choose>
+			<when test="category == 'All'">
+				where
+				( rt_name like
+				'%'||#{restaurant}||'%'
+				and writer
+				like
+				'%'||#{writer}||'%')
+			</when>
+			<otherwise>
+				where
+				(category like
+				'%'||#{category}||'%'
+				and rt_name
+				like
+				'%'||#{restaurant}||'%'
+				and writer
+				like '%'||#{writer}||'%')
+			</otherwise>
+		</choose>
+
+	</sql>
+
+	<!-- choose문 id="search"에 합쳐도 되고, -->
+	<sql id="ord">
+		<choose>
+			<when test="orderBy == 'goodcount'">
+				order by goodcount desc
+			</when>
+
+			<otherwise>
+				order by ppp asc
+			</otherwise>
+		</choose>
+	</sql>
+
+	<sql id="paging_header">
+		select *
+		from (
+		select rownum as rn, A.*
+		from (
+	</sql>
+	<sql id="paging_footer">
+		) A
+		) where rn between #{start} and #{end}
+	</sql>
+
+</mapper>	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

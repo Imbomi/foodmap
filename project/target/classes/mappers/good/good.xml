@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="good">
+	<insert id="insert">
+		insert into good
+		(good_idx, userid, rt_idx,
+		good_check)
+		values
+		(seq_good.nextval,#{userid}
+		,#{rt_idx},1)
+	</insert>
+	<update id="modify">
+		update good
+		set good_check=#{good_check}
+		where
+		good_idx=#{good_idx}
+	</update>
+	<delete id="delete">
+		delete from good
+		where good_idx=#{good_idx}
+	</delete>
+	<delete id="deleteByResto">
+		delete from good where rt_idx=#{rt_idx}
+	</delete>
+	<delete id="deleteAll">
+		delete from good
+		where userid=#{userid}
+	</delete>
+	<select id="listGood"
+		resultType="com.example.project.model.good.dto.GoodDTO">
+		<include refid="paging_header" />
+		select good_idx, r.rt_idx, g.userid, name, rt_name, r.writer, r.category, r.ppp, r.picture_url
+		from member m, good g, restaurant r
+		where m.userid=g.userid
+		and good_check=1
+		and g.rt_idx=r.rt_idx
+		and g.userid=#{userid}
+		order by good_idx
+		<include refid="paging_footer" />
+	</select>
+	
+	<select id="goodcount" resultType="int">
+		select count(*) from good where rt_idx=#{rt_idx}
+	</select>
+
+	<select id="count" resultType="int">
+		select count(*) from good where userid=#{userid}
+	</select>
+	
+	<select id="goodcheck" resultType="int">
+		select count(*) from good where userid=#{userid} and rt_idx=#{rt_idx} and good_check=1
+	</select>
+
+	<sql id="paging_header">
+		select *
+		from (
+		select rownum as rn, A.*
+		from (
+	</sql>
+	<sql id="paging_footer">
+		) A
+		) where rn between #{start} and #{end}
+	</sql>
+</mapper>

@@ -1,0 +1,12 @@
+eclipse.preferences.version=1
+encoding//src/main/webapp/WEB-INF/views/fm/fm_foodmap2.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/views/fm/fm_good-list.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/views/fm/fm_main.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/views/fm/fm_notice-view.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/views/fm/fm_notice-write.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/views/fm/fm_notice.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/views/fm/fm_restaurant-view.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/views/fm/fm_restaurant-write.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/views/fm/fm_restaurant.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/views/fm/fm_survey-event.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/views/fm/fm_survey_result.jsp=UTF-8
